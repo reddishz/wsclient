@@ -1,0 +1,5 @@
+make all --dry-run --keep-going --print-directory
+make: Entering directory '/data/mworks/works.my/freeswitch/fs_vmd_src/wwsocket'
+make: Nothing to be done for 'all'.
+make: Leaving directory '/data/mworks/works.my/freeswitch/fs_vmd_src/wwsocket'
+ 

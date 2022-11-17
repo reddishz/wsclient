@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "revmd.h": "c",
+        "fstream": "c",
+        "system_error": "c",
+        "random": "c",
+        "ssl.h": "c",
+        "err.h": "c",
+        "crypto.h": "c",
+        "utils.h": "c",
+        "libwsclient.h": "c",
+        "types.h": "c",
+        "in.h": "c",
+        "socket.h": "c",
+        "time.h": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "wsclient.h": "c"
+    }
+}
