@@ -1,0 +1,10 @@
+make all --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/data/mworks/works.my/freeswitch/fs_vmd_src/wwsocket'
+gcc -fPIC -g -ggdb  -Wall -Wextra -pedantic --std=gnu99 -I. -I./include   -o base64.o -c base64.c
+gcc -fPIC -g -ggdb  -Wall -Wextra -pedantic --std=gnu99 -I. -I./include   -o demo.o -c demo.c
+gcc -fPIC -g -ggdb  -Wall -Wextra -pedantic --std=gnu99 -I. -I./include   -o sha1.o -c sha1.c
+gcc -fPIC -g -ggdb  -Wall -Wextra -pedantic --std=gnu99 -I. -I./include   -o utils.o -c utils.c
+gcc -fPIC -g -ggdb  -Wall -Wextra -pedantic --std=gnu99 -I. -I./include   -o wsclient.o -c wsclient.c
+gcc -o demo base64.o demo.o sha1.o utils.o wsclient.o   -L . -lssl -lcrypto -luuid   -lm  -Wl,-R -Wl,/usr/local/lib64/aliyun 
+make: Leaving directory '/data/mworks/works.my/freeswitch/fs_vmd_src/wwsocket'
+ 
