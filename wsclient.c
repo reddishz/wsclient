@@ -66,7 +66,9 @@ void *libwsclient_run_thread(void *ptr)
 
 		n = _libwsclient_read(c, pframe->payload, len);
 		if (n < len){
-			LIBWSCLIENT_ON_ERROR(c, "receiving data not enough");
+			char buff[256] = {0};
+			sprintf(buff, "wsclient try to read %lld bytes, but gt %ld bytes.", len, n);
+			LIBWSCLIENT_ON_ERROR(c, buff);
 			break;
 		}
 
