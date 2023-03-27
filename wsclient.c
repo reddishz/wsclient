@@ -66,8 +66,8 @@ void *libwsclient_run_thread(void *ptr)
 
 		n = _libwsclient_read(c, pframe->payload, len);
 		if (n < len){
-			char buff[256] = {0};
-			sprintf(buff, "wsclient try to read %lld bytes, but gt %ld bytes.", len, n);
+			char buff[128] = {0};
+			sprintf(buff, "wsclient try to read %lld bytes, but get %ld bytes.", len, n);
 			LIBWSCLIENT_ON_ERROR(c, buff);
 			break;
 		}
@@ -485,9 +485,11 @@ int stricmp(const char *s1, const char *s2)
 ssize_t _libwsclient_read(wsclient *c, void *buf, size_t length)
 {
 	ssize_t n = 0;
+	char* sp = "";
 
 	if (TEST_FLAG(c, FLAG_CLIENT_IS_SSL))
 	{
+		sp = "ssl";
 		n = (ssize_t)SSL_read(c->ssl, buf, length);
 	}
 	else
@@ -496,7 +498,7 @@ ssize_t _libwsclient_read(wsclient *c, void *buf, size_t length)
 	}
 #ifdef DEBUG
 	char buff[256] = {0};
-	sprintf(buff, "wsclient read %ld bytes.", n);
+	sprintf(buff, "wsclient %s read %ld bytes.",sp, n);
 	LIBWSCLIENT_ON_INFO(c, buff);
 #endif
 	return n;
@@ -506,19 +508,21 @@ ssize_t _libwsclient_write(wsclient *c, const void *buf, size_t length)
 {
 	pthread_mutex_lock(&c->send_lock);
 	ssize_t len = 0;
-	
+	char* sp = "";
 	if (TEST_FLAG(c, FLAG_CLIENT_IS_SSL))
 	{
+		sp = "ssl";
 		len = (ssize_t) SSL_write(c->ssl, buf, length);
 	}
 	else
 	{
+		sp = "";
 		len =  send(c->sockfd, buf, length, 0);
 	}
 	pthread_mutex_unlock(&c->send_lock);
 #ifdef DEBUG
 	char buff[256] = {0};
-	sprintf(buff, "wsclient send %ld of %ld bytes.", len, length);
+	sprintf(buff, "wsclient %s send %ld of %ld bytes.",sp, len, length);
 	LIBWSCLIENT_ON_INFO(c, buff);
 #endif
 	return len;
