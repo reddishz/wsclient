@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-
+#include <sys/types.h>
+#include <dirent.h>
 #include "libwsclient.h"
 
 int onclose(wsclient *c) {
@@ -22,9 +23,43 @@ int onmessage(wsclient *c, bool isText, unsigned long long lenth, unsigned char 
 	return 0;
 }
 
+static int filter_data(const struct dirent* det)
+{
+	return  strncmp(det->d_name, "input",5) == 0;
+}
+
 int onopen(wsclient *c) {
 	fprintf(stderr, "onopen called: %d\n", c->sockfd);
-	libwsclient_send_string(c, "Hello onopen");
+	
+	struct dirent **namelist;
+    int n;
+
+   n = scandir(".", &namelist, filter_data, alphasort);
+    if (n < 0){
+		fprintf(stderr, "no input* files found on current directory.");
+		return 0;
+	}
+	
+	while (n--) {
+		sleep(1);
+		char* fname = namelist[n]->d_name;		
+		int isText = fname[strlen(fname)-1] == 's';
+		
+		char buff[1024*10] = {0};
+		FILE* finput = open(fname, 'r');
+		size_t flen = read(finput, buff, 1024*10);
+		close(finput);
+		
+		if (isText)
+			libwsclient_send_string(c, buff);
+		else
+			libwsclient_send_data(c, OP_CODE_TYPE_BINARY, buff, flen);
+
+		fprintf(stderr, "sending %ld byte %s from: %s\n", flen, isText ? "Text" : "Data",  fname);
+		free(namelist[n]);
+	}
+	free(namelist);
+
 	return 0;
 }
 
