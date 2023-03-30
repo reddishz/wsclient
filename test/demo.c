@@ -19,7 +19,18 @@ int onerror(wsclient *c, int code, char *msg)
 
 int onmessage(wsclient *c, bool isText, unsigned long long lenth, unsigned char *payload)
 {
-	fprintf(stderr, "onmessage: (%llu): %s\n", lenth, payload);
+	fprintf(stderr, "received %s message of len %ld:\n", isText ? "Text" : "Binary", lenth);
+	if (isText)
+		fprintf(stderr, "TEXT: %s\n", (char*)payload);
+	else{
+		for (int i = 0; i < lenth; i++)
+		{
+			fprintf(stderr, " %x ", payload[i]);
+			if (i % 16 == 0)
+				fprintf(stderr, " \n ");
+		}
+	}
+
 	return 0;
 }
 
@@ -53,7 +64,7 @@ int onopen(wsclient *c) {
 		if (isText)
 			libwsclient_send_string(c, buff);
 		else
-			libwsclient_send_data(c, OP_CODE_TYPE_BINARY, buff, flen);
+			libwsclient_send_data(c, OP_CODE_TYPE_BINARY, (unsigned char*)buff, flen);
 
 		fprintf(stderr, "sending %ld byte %s from: %s\n", flen, isText ? "Text" : "Data",  fname);
 		free(namelist[n]);
@@ -64,8 +75,14 @@ int onopen(wsclient *c) {
 }
 
 int main(int argc, char **argv) {
+
+	char buff[512] = {"wss://nls-gateway.cn-shanghai.aliyuncs.com/ws/v1?token=7b98df51a2c540d88ce84a2c5734fee4"};
+	FILE *finput = open("cfg.url", 'r');
+	size_t flen = read(finput, buff, 1024 * 10);
+	close(finput);
+
 	//Initialize new wsclient * using specified URI
-	wsclient *client = libwsclient_new("wss://nls-gateway.cn-shanghai.aliyuncs.com/ws/v1?token=7b98df51a2c540d88ce84a2c5734fee4");
+	wsclient *client = libwsclient_new(buff);
 	if(!client) {
 		fprintf(stderr, "Unable to initialize new WS client.\n");
 		exit(1);

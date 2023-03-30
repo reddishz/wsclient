@@ -7,7 +7,7 @@ MODOBJ = $(objects)
 XMODCFLAGS = -Wall -Werror --std=gnu99 
 MODCFLAGS = -Wall -Wextra -pedantic --std=gnu99
 
-MODLDFLAGS = -L ../wwsocket/lib -lssl -lcrypto -lpthread -luuid -lwwsocket   -lm  -Wl,-R -Wl,/usr/local/lib64/aliyun
+MODLDFLAGS = -L ../wwsocket/lib -lpthread -luuid -lwwsocket   -lm  -Wl,-R -Wl,/usr/local/lib64/aliyun -lssl -lcrypto 
 
 INCLUDE= -I. -I./include  -I../wwsocket/include
 
