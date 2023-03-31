@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
 
 	char buff[512] = {"wss://nls-gateway.cn-shanghai.aliyuncs.com/ws/v1?token=7b98df51a2c540d88ce84a2c5734fee4"};
 	FILE *finput = open("cfg.url", 'r');
-	size_t flen = read(finput, buff, 1024 * 10);
+	size_t flen = read(finput, buff, 512);
 	close(finput);
 
 	//Initialize new wsclient * using specified URI

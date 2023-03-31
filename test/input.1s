@@ -1,0 +1,1 @@
+{"header":{"task_id":"4480803cb26243ae9abd0c2ed39545f4","namespace":"SpeechLongSynthesizer","name":"StartSynthesis","message_id":"5c403425ec074a658a44daf03db5e376","appkey":"jRoG2oZKQv3sgHIk"},"payload": {"volume":50,"voice":"xiaoyun","speech_rate":0,"format":"wav","text":"你好啊，这里是测试中心，请问有什么可以帮寧","pitch_rate":0,"enable_ptts":false,"sample_rate":16000,"enable_subtitle":false}}
