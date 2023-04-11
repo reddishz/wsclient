@@ -11,8 +11,8 @@
 */
 #define MAX_PAYLOAD_SIZE 1024
 
-ssize_t _libwsclient_read(wsclient *c, void *buf, size_t length);
-ssize_t _libwsclient_write(wsclient *c, const void *buf, size_t length);
+size_t _libwsclient_read(wsclient *c, void *buf, size_t length);
+size_t _libwsclient_write(wsclient *c, const void *buf, size_t length);
 int libwsclient_open_connection(const char *host, const char *port);
 int stricmp(const char *s1, const char *s2);
 void libwsclient_handle_control_frame(wsclient *c, wsclient_frame_in *ctl_frame);

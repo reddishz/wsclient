@@ -64,8 +64,14 @@ void *libwsclient_run_thread(void *ptr)
 		pframe->payload_len = len;
 		pframe->payload = calloc(len, 1);
 
-		n = _libwsclient_read(c, pframe->payload, len);
-		if (n < len){
+		size_t z = 0;
+		do
+		{
+			n = _libwsclient_read(c, pframe->payload + z, len - z);
+			z += n;
+		} while ((z < len) && (n > 0));
+
+		if (z < len){
 			char buff[128] = {0};
 			sprintf(buff, "wsclient try to read %lld bytes, but get %ld bytes.", len, n);
 			LIBWSCLIENT_ON_ERROR(c, buff);
@@ -482,9 +488,9 @@ int stricmp(const char *s1, const char *s2)
 	return c1 - c2;
 }
 
-ssize_t _libwsclient_read(wsclient *c, void *buf, size_t length)
+size_t _libwsclient_read(wsclient *c, void *buf, size_t length)
 {
-	ssize_t n = 0;
+	size_t n = 0;
 	char* sp = "";
 
 	if (TEST_FLAG(c, FLAG_CLIENT_IS_SSL))
@@ -500,11 +506,12 @@ ssize_t _libwsclient_read(wsclient *c, void *buf, size_t length)
 	char buff[256] = {0};
 	sprintf(buff, "wsclient %s read %ld bytes.",sp, n);
 	LIBWSCLIENT_ON_INFO(c, buff);
+	c->onmessage(c, 0, n, buf);
 #endif
 	return n;
 }
 
-ssize_t _libwsclient_write(wsclient *c, const void *buf, size_t length)
+size_t _libwsclient_write(wsclient *c, const void *buf, size_t length)
 {
 	pthread_mutex_lock(&c->send_lock);
 	ssize_t len = 0;
